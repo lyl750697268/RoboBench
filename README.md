@@ -1,14 +1,15 @@
-# RoboBench Metric Evaluation Framework
+<p align="center">
+  <img src="https://robo-bench.github.io/static/images/log/R1.png" alt="RoboBench Logo" width="120"/>
+</p>
+
+<h1 align="center" style="font-size:2.5em;">RoboBench: A Comprehensive Evaluation Benchmark for Multimodal Large Language Models as Embodied Brain</h1>
 
 <div align="center">
 
-![RoboBench Logo](https://img.shields.io/badge/RoboBench-Metric%20Evaluation-blue?style=for-the-badge)
-
-**A comprehensive evaluation framework for robotic AI models with multimodal capabilities**
-
-[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
-[![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4o-green.svg)](https://openai.com)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Paper](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/abs/2510.17801v1)
+[![Project Page](https://img.shields.io/badge/Project-Page-green)](https://robo-bench.github.io/)
+[![Huggingface](https://img.shields.io/badge/Huggingface-Repository-yellow)](https://huggingface.co/datasets/LeoFan01/RoboBench)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
 </div>
 
@@ -17,9 +18,9 @@
 ## 📋 Table of Contents
 
 - [Overview](#overview)
-- [Architecture](#architecture)
-- [Installation](#installation)
+- [Key Features](#key-features)
 - [Quick Start](#quick-start)
+- [Installation](#installation)
 - [Module Documentation](#module-documentation)
   - [API Call General2](#api-call-general2)
   - [Multi-Choice Evaluation](#multi-choice-evaluation)
@@ -31,48 +32,74 @@
 
 ---
 
-## 🎯 Overview
+## 📋 Overview
 
-The RoboBench Metric Evaluation Framework is a sophisticated system designed to evaluate multimodal AI models on robotic tasks. It provides comprehensive evaluation capabilities across three main dimensions:
+RoboBench is a comprehensive evaluation benchmark designed to assess the capabilities of Multimodal Large Language Models (MLLMs) in embodied intelligence tasks. This benchmark provides a systematic framework for evaluating how well these models can understand and reason about robotic scenarios.
+
+It provides comprehensive evaluation capabilities across three main dimensions:
 
 - **🔄 API Call General2**: Handles multimodal API calls with image processing and prompt management
 - **📊 Multi-Choice Evaluation**: Evaluates multiple-choice questions with automated scoring
 - **🧠 Planning Evaluation**: Assesses complex planning tasks with DAG-based evaluation
 
-### Key Features
+## 🎯 Key Features
 
-- ✨ **Asynchronous Processing**: High-performance concurrent API calls
-- 🖼️ **Multimodal Support**: Image and text processing capabilities
-- 📈 **Comprehensive Scoring**: Multiple evaluation metrics and scoring systems
-- 🔄 **Caching System**: Intermediate result caching for efficient processing
-- 📊 **Detailed Analytics**: Rich evaluation reports and statistics
-- 🎯 **Flexible Configuration**: Customizable prompts and evaluation criteria
-
----
-
-## 🏗️ Architecture
-
-```
-evaluation/
-├── api_call_general2/          # Core API calling infrastructure
-│   ├── api_utils.py            # Async API utilities with retry logic
-│   ├── cv_utils.py             # Computer vision utilities
-│   ├── general_pipeline.py     # Main processing pipeline
-│   └── prompt_utils.py          # Prompt management and formatting
-├── multi-choice/               # Multiple-choice evaluation
-│   ├── evaluate_responses.py   # Response evaluation logic
-│   ├── generation_pipeline_all.sh  # Batch processing script
-│   └── merge_all_results.py    # Result merging utilities
-└── planning/                   # Planning task evaluation
-    ├── all_in_one.py           # Comprehensive planning evaluator
-    ├── generation_pipeline_all.sh  # Planning batch processing
-    ├── merge_all_results.py    # Result aggregation
-    └── unified_prompts.py      # Standardized prompt templates
-```
+- **🧠 Comprehensive Benchmark**: Covers multiple aspects of embodied intelligence
+- **📊 Rich Dataset**: Contains thousands of carefully curated examples
+- **🔬 Novel Evaluation**: Designed with novel evaluation metrics
+- **🌐 Multimodal**: Supports text, images, and video data
+- **🤖 Robotics Focus**: Specifically tailored for robotic applications
 
 ---
 
-## 🚀 Installation
+## 🚀 Quick Start
+
+### 1. Run Demo Scripts
+For multi-choice questions, including Perception Reasoning, Affordance Reasoning, and Error Analysis:
+```bash
+cd evaluation/multi-choice
+bash generation_pipeline_all.sh
+```
+
+For planning questions, including Instruction Comprehension and Generalized Planning:
+```bash
+cd evaluation/planning
+bash generation_pipeline_all.sh
+```
+
+### 2. Basic API Call
+
+```python
+from evaluation.api_call_general2.general_pipeline import main
+import asyncio
+
+# Run basic evaluation
+asyncio.run(main())
+```
+
+### 3. Multi-Choice Evaluation
+
+```bash
+cd evaluation/multi-choice
+python evaluate_responses.py \
+    --results_file results.json \
+    --output evaluation_results.json \
+    --openai-api-key "your-api-key"
+```
+
+### 4. Planning Evaluation
+
+```bash
+cd evaluation/planning
+python all_in_one.py \
+    --input-dir /path/to/results \
+    --dataset-base-dir /path/to/RoboBench-dataset \
+    --no-cache
+```
+
+---
+
+## 🛠️ Installation
 
 ### Prerequisites
 
@@ -85,12 +112,12 @@ evaluation/
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd evaluation
+   cd RoboBench
    ```
 
 2. **Install dependencies**
    ```bash
-   pip install openai aiofiles tenacity tqdm asyncio
+   pip install openai aiofiles tenacity tqdm asyncio requests opencv-python
    ```
 
 3. **Configure API credentials**
@@ -98,39 +125,6 @@ evaluation/
    # Update api_utils.py with your OpenAI API key
    api_key = "your-openai-api-key-here"
    ```
-
----
-
-## ⚡ Quick Start
-
-### 1. Basic API Call
-
-```python
-from api_call_general2.general_pipeline import main
-import asyncio
-
-# Run basic evaluation
-asyncio.run(main())
-```
-
-### 2. Multi-Choice Evaluation
-
-```bash
-cd multi-choice
-python evaluate_responses.py \
-    --results_file results.json \
-    --output evaluation_results.json
-```
-
-### 3. Planning Evaluation
-
-```bash
-cd planning
-python all_in_one.py \
-    --input-dir /path/to/results \
-    --dataset-base-dir /path/to/dataset \
-    --no-cache
-```
 
 ---
 
@@ -143,22 +137,22 @@ The core infrastructure for handling multimodal API calls with advanced features
 #### Key Components
 
 - **`api_utils.py`**: Asynchronous API utilities with retry logic and concurrency control
-- **`cv_utils.py`**: Computer vision utilities for image processing
+- **`cv_utils.py`**: Computer vision utilities for image processing and base64 encoding
 - **`general_pipeline.py`**: Main processing pipeline with comprehensive argument parsing
 - **`prompt_utils.py`**: Prompt management and formatting utilities
 
 #### Features
 
 - 🚀 **High Concurrency**: Up to 50 concurrent API calls
-- 🔄 **Retry Logic**: Exponential backoff with configurable retry attempts
+- 🔄 **Retry Logic**: Exponential backoff with configurable retry attempts (10 attempts)
 - 💾 **Temporary Results**: Automatic saving of intermediate results
-- 🖼️ **Image Processing**: Base64 encoding and image resizing
+- 🖼️ **Image Processing**: Base64 encoding and image resizing (512x512)
 - 📝 **Prompt Templates**: Flexible prompt formatting system
 
 #### Usage Example
 
 ```python
-from api_call_general2.general_pipeline import main
+from evaluation.api_call_general2.general_pipeline import main
 import argparse
 
 # Configure arguments
@@ -194,7 +188,7 @@ Comprehensive evaluation system for multiple-choice questions with automated sco
 #### Usage Example
 
 ```python
-from multi_choice.evaluate_responses import evaluate_results_file
+from evaluation.multi_choice.evaluate_responses import evaluate_results_file
 
 # Evaluate responses
 evaluation_summary = evaluate_results_file(
@@ -217,6 +211,12 @@ Advanced evaluation system for complex planning tasks with DAG-based assessment.
 - **`generation_pipeline_all.sh`**: Batch processing for planning tasks
 - **`merge_all_results.py`**: Result aggregation utilities
 
+#### Task Types
+
+- **Q1 (Multi-step Planning)**: Complex planning tasks requiring multiple sequential actions
+- **Q2 (Single-step Planning)**: Simple planning tasks requiring one action
+- **Q3 (Yes/No Questions)**: Binary decision tasks
+
 #### Features
 
 - 🎯 **Multi-Modal Evaluation**: Q1, Q2, Q3 task types with specialized evaluation
@@ -228,7 +228,7 @@ Advanced evaluation system for complex planning tasks with DAG-based assessment.
 #### Usage Example
 
 ```python
-from planning.all_in_one import main
+from evaluation.planning.all_in_one import main
 import asyncio
 
 # Run comprehensive planning evaluation
@@ -246,18 +246,9 @@ result = asyncio.run(main(
 
 ### Example 1: Basic Multimodal Evaluation
 
-```python
-# Configure your evaluation
-config = {
-    "questions_file": "data/questions.json",
-    "output_file": "results/output.jsonl",
-    "model": "gpt-4o",
-    "image_key": "image_urls",
-    "question_key": "question"
-}
-
-# Run evaluation
-python api_call_general2/general_pipeline.py \
+```bash
+# Run evaluation with image processing
+python evaluation/api_call_general2/general_pipeline.py \
     --questions_file data/questions.json \
     --output_file results/output.jsonl \
     --model gpt-4o \
@@ -269,18 +260,29 @@ python api_call_general2/general_pipeline.py \
 
 ```bash
 # Run batch evaluation for multiple models
-cd multi-choice
+cd evaluation/multi-choice
 bash generation_pipeline_all.sh
 ```
 
 ### Example 3: Comprehensive Planning Evaluation
 
-```python
+```bash
 # Run full planning evaluation pipeline
-python planning/all_in_one.py \
+python evaluation/planning/all_in_one.py \
     --input-dir results/ \
     --dataset-base-dir /path/to/RoboBench-hf \
     --no-cache \
+    --version v1.0
+```
+
+### Example 4: Skip Specific Steps
+
+```bash
+# Skip certain evaluation steps
+python evaluation/planning/all_in_one.py \
+    --input-dir results/ \
+    --dataset-base-dir /path/to/RoboBench-hf \
+    --skip-steps q1_extract q1_dag \
     --version v1.0
 ```
 
@@ -342,6 +344,12 @@ evaluation_config = {
    TASK_TIMEOUT = 1200
    ```
 
+4. **Missing DAG Files**
+   ```bash
+   # Ensure dataset base directory is correct
+   --dataset-base-dir /path/to/RoboBench-hf
+   ```
+
 ### Debug Mode
 
 ```python
@@ -361,6 +369,29 @@ logging.basicConfig(level=logging.DEBUG)
 | **Timeout** | 360 seconds per request |
 | **Cache Support** | Intermediate result caching |
 | **Batch Processing** | Efficient large-scale evaluation |
+| **Image Processing** | 512x512 resize with base64 encoding |
+
+---
+
+## 🏗️ Architecture
+
+```
+evaluation/
+├── api_call_general2/          # Core API calling infrastructure
+│   ├── api_utils.py            # Async API utilities with retry logic
+│   ├── cv_utils.py             # Computer vision utilities
+│   ├── general_pipeline.py     # Main processing pipeline
+│   └── prompt_utils.py         # Prompt management and formatting
+├── multi-choice/               # Multiple-choice evaluation
+│   ├── evaluate_responses.py   # Response evaluation logic
+│   ├── generation_pipeline_all.sh  # Batch processing script
+│   └── merge_all_results.py    # Result merging utilities
+└── planning/                   # Planning task evaluation
+    ├── all_in_one.py           # Comprehensive planning evaluator
+    ├── generation_pipeline_all.sh  # Planning batch processing
+    ├── merge_all_results.py    # Result aggregation
+    └── unified_prompts.py      # Standardized prompt templates
+```
 
 ---
 
