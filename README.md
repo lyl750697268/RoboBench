@@ -245,7 +245,7 @@ result = asyncio.run(main(
 ---
 
 ## 😲 Results
-<h1>Results on Perception Reasoning (%)</h1>
+<h1>Results on Perception Reasoning</h1>
 <p><strong>Attr.</strong> = Attribute; <strong>Temp.</strong> = Temporal; <strong>Refer. Comprehen.</strong> = Reference Comprehension</p>
 <table>
 <tr style="background:#f2f2f2;"><th></th><th colspan="9"><strong>Perception Reasoning</strong></th></tr>
