@@ -23,6 +23,7 @@
 - [Installation](#installation)
 - [Quick Start](#quick-start)
 - [Evaluation Framework](#evaluation-framework)
+- [Results](#results)
 - [Contributing](#contributing)
 - [License](#license)
 - [Citation](#citation)
@@ -244,7 +245,6 @@ result = asyncio.run(main(
 ---
 
 ## 😲 Results
-### Perception Reasoning
 <h1>Results on Perception Reasoning (%)</h1>
 <p><strong>Attr.</strong> = Attribute; <strong>Temp.</strong> = Temporal; <strong>Refer. Comprehen.</strong> = Reference Comprehension</p>
 <table>
@@ -259,7 +259,7 @@ result = asyncio.run(main(
 <tr style="background:#f2f2f2;"><td colspan="10"><strong>Closed-Source MLLMs</strong></td></tr>
 <tr><td>GPT-4o-Mini</td><td>38.75</td><td>18.84</td><td>26.43</td><td>53.66</td><td>30.36</td><td>22.65</td><td>34.25</td><td>39.67</td><td>33.08</td></tr>
 
-<tr><td>GPT-4o</td><td>**64.96**</td><td>39.38</td><td>24.92</td><td>46.75</td><td>42.24</td><td>20.61</td><td>33.1</td><td>41.31</td><td>39.16</td></tr>
+<tr><td>GPT-4o</td><td><b>64.96</b></td><td>39.38</td><td>24.92</td><td>46.75</td><td>42.24</td><td>20.61</td><td>33.1</td><td>41.31</td><td>39.16</td></tr>
 
 <tr><td>Claude-3.5-Sonnet</td><td>41.31</td><td>36.23</td><td>29.13</td><td>62.6</td><td>34.98</td><td>21.88</td><td>36.09</td><td>25.36</td><td>35.95</td></tr>
 
@@ -267,13 +267,13 @@ result = asyncio.run(main(
 
 <tr><td>Gemini-2.0-Flash</td><td>56.69</td><td>20.77</td><td>49.08</td><td><u>78.46</u></td><td>42.57</td><td>21.37</td><td>51.72</td><td>72.4</td><td>49.13</td></tr>
 
-<tr><td>Gemini-2.5-Flash</td><td>62.39</td><td>39.38</td><td>**55.02**</td><td>77.24</td><td><u>57.43</u></td><td><u>33.58</u></td><td><u>70.34</u></td><td><u>74.64</u></td><td><u>58.75</u></td></tr>
+<tr><td>Gemini-2.5-Flash</td><td>62.39</td><td>39.38</td><td><b>55.02</b></td><td>77.24</td><td><u>57.43</u></td><td><u>33.58</u></td><td><u>70.34</u></td><td><u>74.64</u></td><td><u>58.75</u></td></tr>
 
-<tr><td>Gemini-2.5-Pro</td><td><u>64.30</u></td><td>41.71</td><td><u>54.83</u></td><td>**82.27**</td><td>**60.44**</td><td>**49.68**</td><td>**71.73**</td><td>**78.68**</td><td>**62.96**</td></tr>
+<tr><td>Gemini-2.5-Pro</td><td><u>64.30</u></td><td>41.71</td><td><u>54.83</u></td><td><b>82.27</b></td><td><b>60.44</b></td><td><b>49.68</b></td><td><b>71.73</b></td><td><b>78.68</b></td><td><b>62.96</b></td></tr>
 
 <tr><td>Qwen-VL-Plus</td><td>28.21</td><td>21.74</td><td>34.63</td><td>58.54</td><td>27.72</td><td>21.37</td><td>31.03</td><td>34.36</td><td>32.2</td></tr>
 
-<tr><td>Qwen-VL-Max</td><td>47.86</td><td>**43.48**</td><td>39.7</td><td>75.2</td><td>50.17</td><td>27.45</td><td>37.93</td><td>41.53</td><td>45.42</td></tr>
+<tr><td>Qwen-VL-Max</td><td>47.86</td><td><b>43.48</b></td><td>39.7</td><td>75.2</td><td>50.17</td><td>27.45</td><td>37.93</td><td>41.53</td><td>45.42</td></tr>
 
 <tr style="background:#f2f2f2;"><td colspan="10"><strong>Open-Source Multi-Image MLLMs</strong></td></tr>
 <tr><td>LLaVA-OneVision-0.5B</td><td>30.34</td><td>23.68</td><td>37.08</td><td>49.66</td><td>27.27</td><td>18.42</td><td>23.65</td><td>19.21</td><td>28.66</td></tr>
@@ -289,7 +289,6 @@ result = asyncio.run(main(
 
 </table>
 
-### Instruction Comprehension and Generalized Planning
 <h1>Results on Instruction Comprehension and Generalized Planning Q1</h1>
 <p><strong>manip.</strong> = manipulation; <strong>Afford.</strong> = affordance; <strong>Knowl.</strong> = Knowledge</p>
 <table>
@@ -304,17 +303,17 @@ result = asyncio.run(main(
 <tr style="background:#e6e6e6;"><td colspan="15"><strong>Closed-Source MLLMs</strong></td></tr>
 <tr><td>GPT-4o-Mini</td><td>41.21</td><td>14.95</td><td>28.08</td><td>27.47</td><td>25.21</td><td>37.98</td><td>31.72</td><td>33.75</td><td>38.46</td><td>42.56</td><td>39.11</td><td>33.29</td><td>34.04</td><td>33.31</td></tr>
 
-<tr><td>GPT-4o</td><td>45.6</td><td><u>19.04</u></td><td>32.32</td><td>28.28</td><td>32.65</td><td>**52.69**</td><td>35.71</td><td>39.93</td><td>46.09</td><td>41.34</td><td>38.51</td><td>33.66</td><td>39.41</td><td>37.74</td></tr>
+<tr><td>GPT-4o</td><td>45.6</td><td><u>19.04</u></td><td>32.32</td><td>28.28</td><td>32.65</td><td><b>52.69</b></td><td>35.71</td><td>39.93</td><td>46.09</td><td>41.34</td><td>38.51</td><td>33.66</td><td>39.41</td><td>37.74</td></tr>
 
-<tr><td>Claude-3.5-Sonnet</td><td>42.11</td><td>14.85</td><td>28.48</td><td>**30.18**</td><td>33.65</td><td>50.29</td><td>**41.05**</td><td>38.28</td><td>40.67</td><td>39.63</td><td>45.95</td><td>40.43</td><td>39.77</td><td>38.07</td></tr>
+<tr><td>Claude-3.5-Sonnet</td><td>42.11</td><td>14.85</td><td>28.48</td><td><b>30.18</b></td><td>33.65</td><td>50.29</td><td><b>41.05</b></td><td>38.28</td><td>40.67</td><td>39.63</td><td>45.95</td><td>40.43</td><td>39.77</td><td>38.07</td></tr>
 
-<tr><td>Claude-3.7-Sonnet</td><td><u>47.77</u></td><td>14.53</td><td>31.15</td><td><u>29.86</u></td><td><u>38.69</u></td><td>50.39</td><td>37.06</td><td>38.65</td><td>41.86</td><td>**51.83**</td><td>**48.19**</td><td><u>44.51</u></td><td><u>39.95</u></td><td><u>41.68</u></td></tr>
+<tr><td>Claude-3.7-Sonnet</td><td><u>47.77</u></td><td>14.53</td><td>31.15</td><td><u>29.86</u></td><td><u>38.69</u></td><td>50.39</td><td>37.06</td><td>38.65</td><td>41.86</td><td><b>51.83</b></td><td><b>48.19</b></td><td><u>44.51</u></td><td><u>39.95</u></td><td><u>41.68</u></td></tr>
 
-<tr><td>Gemini-2.0-Flash</td><td>43.49</td><td>16.38</td><td>29.93</td><td>28.67</td><td>33.66</td><td>48.27</td><td>33.95</td><td>**40.76**</td><td><u>54.27</u></td><td>40.12</td><td>46.13</td><td>40.73</td><td>37.02</td><td>38.62</td></tr>
+<tr><td>Gemini-2.0-Flash</td><td>43.49</td><td>16.38</td><td>29.93</td><td>28.67</td><td>33.66</td><td>48.27</td><td>33.95</td><td><b>40.76</b></td><td><u>54.27</u></td><td>40.12</td><td>46.13</td><td>40.73</td><td>37.02</td><td>38.62</td></tr>
 
-<tr><td>Gemini-2.5-Flash</td><td>42.53</td><td>17.1</td><td>29.82</td><td>27.05</td><td>**40.46**</td><td>49.91</td><td>34.5</td><td>39.87</td><td>53.37</td><td><u>46.22</u></td><td>39.41</td><td>43.29</td><td>38.32</td><td>39.33</td></tr>
+<tr><td>Gemini-2.5-Flash</td><td>42.53</td><td>17.1</td><td>29.82</td><td>27.05</td><td><b>40.46</b></td><td>49.91</td><td>34.5</td><td>39.87</td><td>53.37</td><td><u>46.22</u></td><td>39.41</td><td>43.29</td><td>38.32</td><td>39.33</td></tr>
 
-<tr><td>Gemini-2.5-Pro</td><td>**51.15**</td><td>**19.60**</td><td>**35.37**</td><td>29.71</td><td>37.65</td><td><u>50.96</u></td><td><u>37.44</u></td><td>39.29</td><td>**56.50**</td><td>43.29</td><td><u>47.35</u></td><td>**45.12**</td><td>**43.62**</td><td>**41.81**</td></tr>
+<tr><td>Gemini-2.5-Pro</td><td><b>51.15</b></td><td><b>19.60</b></td><td><b>35.37</b></td><td>29.71</td><td>37.65</td><td><u>50.96</u></td><td><u>37.44</u></td><td>39.29</td><td><b>56.50</b></td><td>43.29</td><td><u>47.35</u></td><td><b>45.12</b></td><td><b>43.62</b></td><td><b>41.81</b></td></tr>
 
 <tr><td>Qwen-VL-Plus</td><td>37.77</td><td>10.38</td><td>24.07</td><td>24.68</td><td>21.75</td><td>32.98</td><td>33.91</td><td>28.45</td><td>33.55</td><td>33.78</td><td>30.95</td><td>28.6</td><td>4.39</td><td>26.77</td></tr>
 
@@ -334,7 +333,6 @@ result = asyncio.run(main(
 
 </table>
 
-### Affordance Prediction and Failure Analysis
 <h1>Results on Affordance Prediction and Failure Analysis</h1>
 <p><strong>Naviga.</strong> = Navigation</p>
 <table>
@@ -354,11 +352,11 @@ result = asyncio.run(main(
 
 <tr><td>Claude-3.7-Sonnet</td><td>60.02</td><td>52.38</td><td>50.07</td><td>54.06</td><td>18.32</td><td>54.24</td><td>36.28</td></tr>
 
-<tr><td>Gemini-2.0-Flash</td><td>61.65</td><td><u>61.76</u></td><td>**66.89**</td><td><u>63.37</u></td><td><u>28.48</u></td><td>59.8</td><td><u>44.14</u></td></tr>
+<tr><td>Gemini-2.0-Flash</td><td>61.65</td><td><u>61.76</u></td><td><b>66.89</b></td><td><u>63.37</u></td><td><u>28.48</u></td><td>59.8</td><td><u>44.14</u></td></tr>
 
 <tr><td>Gemini-2.5-Flash</td><td>61.2</td><td>52.04</td><td>52.01</td><td>54.29</td><td>18.54</td><td><u>67.65</u></td><td>43.1</td></tr>
 
-<tr><td>Gemini-2.5-Pro</td><td><u>70.54</u></td><td>**62.03**</td><td><u>63.96</u></td><td>**65.21**</td><td>15.96</td><td>**74.31**</td><td>**45.14**</td></tr>
+<tr><td>Gemini-2.5-Pro</td><td><u>70.54</u></td><td><b>62.03</b></td><td><u>63.96</u></td><td><b>65.21</b></td><td>15.96</td><td><b>74.31</b></td><td><b>45.14</b></td></tr>
 
 <tr><td>Qwen-VL-Plus</td><td>51.74</td><td>37.42</td><td>47.97</td><td>48.18</td><td>13.91</td><td>40.0</td><td>26.96</td></tr>
 
@@ -367,11 +365,11 @@ result = asyncio.run(main(
 <tr style="background:#e6e6e6;"><td colspan="8"><strong>Open-Source Multi-Image MLLMs</strong></td></tr>
 <tr><td>LLaVA-OneVision-0.5B</td><td>20.56</td><td>28.56</td><td>27.69</td><td>24.76</td><td>21.19</td><td>24.67</td><td>22.93</td></tr>
 
-<tr><td>LLaVA-OneVision-7B</td><td>23.83</td><td>33.61</td><td>33.43</td><td>30.29</td><td>**29.14**</td><td>34.0</td><td>31.56</td></tr>
+<tr><td>LLaVA-OneVision-7B</td><td>23.83</td><td>33.61</td><td>33.43</td><td>30.29</td><td><b>29.14</b></td><td>34.0</td><td>31.56</td></tr>
 
 <tr><td>Qwen2.5-VL-7B-Ins</td><td>49.73</td><td>38.03</td><td>42.16</td><td>43.15</td><td>13.91</td><td>26.9</td><td>20.41</td></tr>
 
-<tr><td>Qwen2.5-VL-72B-Ins</td><td>**71.54**</td><td>51.94</td><td>47.67</td><td>56.67</td><td>12.59</td><td>50.72</td><td>31.66</td></tr>
+<tr><td>Qwen2.5-VL-72B-Ins</td><td><b>71.54</b></td><td>51.94</td><td>47.67</td><td>56.67</td><td>12.59</td><td>50.72</td><td>31.66</td></tr>
 
 <tr style="background:#e6e6e6;"><td colspan="8"><strong>Embodied MLLMs</strong></td></tr>
 <tr><td>RoboBrain-2.0-7B</td><td>51.87</td><td>54.63</td><td>41.61</td><td>49.37</td><td>7.95</td><td>42.0</td><td>41.24</td></tr>
