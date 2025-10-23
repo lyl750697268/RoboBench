@@ -9,7 +9,7 @@ OPENAI_API_KEY="Your own OpenAI API key"
 BASE_URL="Your own base URL for the API"
 
 # Create results directory if it doesn't exist
-RESULTS_DIR="Your own path to the results directory"
+RESULTS_DIR="Your own path to the planning results directory"
 mkdir -p "$RESULTS_DIR"
 
 # Create log file with timestamp
