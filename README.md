@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://robo-bench.github.io/static/images/log/R1.png" alt="RoboBench Logo" width="120"/>
+  <img src="assets/R1.png" alt="RoboBench Logo" width="120"/>
 </p>
 
 <h1 align="center" style="font-size:2.5em;">RoboBench: A Comprehensive Evaluation Benchmark for Multimodal Large Language Models as Embodied Brain</h1>
@@ -111,8 +111,8 @@ evaluation/
 ### 1. Configure API credentials
 Complete your individual settings in:
 ```bash
-`evaluation/multi-choice/generation_pipeline_all.sh`
-`evaluation/planning/generation_pipeline_all.sh`
+evaluation/multi-choice/generation_pipeline_all.sh
+evaluation/planning/generation_pipeline_all.sh
 ```
 
 ```bash
