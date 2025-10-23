@@ -7,8 +7,11 @@ import json, os
 
 def main():
     parser = argparse.ArgumentParser(description="Request model completion for questions")
+    parser.add_argument('--base-url', type=str, help="Base URL for the API")
+    parser.add_argument('--api-key', type=str, help="API key for the API")
     parser.add_argument('--questions_file', type=str, help="Path to questions file")
     parser.add_argument('--output_file', type=str, help="Path to output file")
+    parser.add_argument('--result-dir', type=str, help="Path to result directory")
     parser.add_argument('--result_file', type=str, help="Path to result file")
     parser.add_argument('--model', type=str, default="gpt-4o")
     parser.add_argument('--instruction_key', type=str, default=None)
@@ -18,9 +21,12 @@ def main():
     parser.add_argument('--template', type=str, default=None)
     parser.add_argument('--mode', type=str, default='base64')
     args = parser.parse_args()
+    base_url = args.base_url
+    api_key = args.api_key
     questions_file = args.questions_file
     output_file = args.output_file
     result_file = args.result_file
+    result_dir = args.result_dir
     model = args.model
     instruction_key = args.instruction_key
     question_key = args.question_key
@@ -28,6 +34,10 @@ def main():
     system_prompt_file = args.system_prompt_file
     template = args.template
     mode = args.mode
+    if output_file is not None:
+        output_dir = os.path.dirname(output_file)
+        if output_dir and not os.path.exists(output_dir):
+            os.makedirs(output_dir, exist_ok=True)
     if template is None:
         prompt_no_template(questions_file, output_file, instruction_key, question_key, image_key, system_prompt_file)
     else:
@@ -80,7 +90,7 @@ def main():
             
             async def run_with_timeout():
                 return await asyncio.wait_for(
-                    request_model(messages, request_ids, api_model=model),
+                    request_model(messages, request_ids, api_model=model, base_url=base_url, api_key=api_key),
                     timeout=total_timeout
                 )
             
@@ -105,7 +115,7 @@ def main():
             else:
                 print("Temporary result file not found, returning empty results")
                 results += [None] * len(messages)
-    result_dir = os.path.join("../../results", os.path.dirname(questions_file).split('/')[-1])
+    result_dir = os.path.join(result_dir, os.path.dirname(questions_file).split('/')[-1])
     os.makedirs(result_dir, exist_ok=True)
     if args.image_key is not None:
         anno_result_file = os.path.join(result_dir, f"{model}_result_{os.path.basename(questions_file)}")

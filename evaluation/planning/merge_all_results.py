@@ -57,6 +57,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Merge results for all questions")
     parser.add_argument("--model", type=str, default="gemini", help="Model to use for merging")
     parser.add_argument("--file", type=str, default="", help="File name to use for merging")
+    parser.add_argument("--output-dir", type=str, default="", help="Output directory to save the merged results")
     args = parser.parse_args()
-    output_dir = "../../results/" + args.file.split('/')[-2]
+    output_dir = args.output_dir + "/" + args.file.split('/')[-2]
     merge_results_for_question(output_dir, args.model, args.file)

@@ -19,16 +19,13 @@
 
 - [Overview](#overview)
 - [Key Features](#key-features)
-- [Quick Start](#quick-start)
+- [Architecture](#architecture)
 - [Installation](#installation)
-- [Module Documentation](#module-documentation)
-  - [API Call General2](#api-call-general2)
-  - [Multi-Choice Evaluation](#multi-choice-evaluation)
-  - [Planning Evaluation](#planning-evaluation)
-- [Usage Examples](#usage-examples)
-- [Configuration](#configuration)
-- [Troubleshooting](#troubleshooting)
+- [Quick Start](#quick-start)
+- [Evaluation Framework](#evaluation-framework)
 - [Contributing](#contributing)
+- [License](#license)
+- [Citation](#citation)
 
 ---
 
@@ -36,11 +33,13 @@
 
 RoboBench is a comprehensive evaluation benchmark designed to assess the capabilities of Multimodal Large Language Models (MLLMs) in embodied intelligence tasks. This benchmark provides a systematic framework for evaluating how well these models can understand and reason about robotic scenarios.
 
-It provides comprehensive evaluation capabilities across three main dimensions:
+The benchmark covers multiple dimensions of embodied intelligence:
 
-- **🔄 API Call General2**: Handles multimodal API calls with image processing and prompt management
-- **📊 Multi-Choice Evaluation**: Evaluates multiple-choice questions with automated scoring
-- **🧠 Planning Evaluation**: Assesses complex planning tasks with DAG-based evaluation
+- **📋 Instruction Comprehension**: Following and understanding complex instructions
+- **🧠 Perception Reasoning**: Visual understanding and spatial reasoning
+- **📊 Generalized Planning**: Multi-step task planning and execution
+- **🎯 Affordance Reasoning**: Understanding object affordances and interactions
+- **⚠️ Error Analysis**: Identifying and analyzing robotic errors
 
 ## 🎯 Key Features
 
@@ -49,327 +48,8 @@ It provides comprehensive evaluation capabilities across three main dimensions:
 - **🔬 Novel Evaluation**: Designed with novel evaluation metrics
 - **🌐 Multimodal**: Supports text, images, and video data
 - **🤖 Robotics Focus**: Specifically tailored for robotic applications
-
----
-
-## 🚀 Quick Start
-
-### 1. Run Demo Scripts
-For multi-choice questions, including Perception Reasoning, Affordance Reasoning, and Error Analysis:
-```bash
-cd evaluation/multi-choice
-bash generation_pipeline_all.sh
-```
-
-For planning questions, including Instruction Comprehension and Generalized Planning:
-```bash
-cd evaluation/planning
-bash generation_pipeline_all.sh
-```
-
-### 2. Basic API Call
-
-```python
-from evaluation.api_call_general2.general_pipeline import main
-import asyncio
-
-# Run basic evaluation
-asyncio.run(main())
-```
-
-### 3. Multi-Choice Evaluation
-
-```bash
-cd evaluation/multi-choice
-python evaluate_responses.py \
-    --results_file results.json \
-    --output evaluation_results.json \
-    --openai-api-key "your-api-key"
-```
-
-### 4. Planning Evaluation
-
-```bash
-cd evaluation/planning
-python all_in_one.py \
-    --input-dir /path/to/results \
-    --dataset-base-dir /path/to/RoboBench-dataset \
-    --no-cache
-```
-
----
-
-## 🛠️ Installation
-
-### Prerequisites
-
-- Python 3.8+
-- OpenAI API key
-- Required Python packages
-
-### Setup
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd RoboBench
-   ```
-
-2. **Install dependencies**
-   ```bash
-   pip install openai aiofiles tenacity tqdm asyncio requests opencv-python
-   ```
-
-3. **Configure API credentials**
-   ```python
-   # Update api_utils.py with your OpenAI API key
-   api_key = "your-openai-api-key-here"
-   ```
-
----
-
-## 📚 Module Documentation
-
-### 🔄 API Call General2
-
-The core infrastructure for handling multimodal API calls with advanced features.
-
-#### Key Components
-
-- **`api_utils.py`**: Asynchronous API utilities with retry logic and concurrency control
-- **`cv_utils.py`**: Computer vision utilities for image processing and base64 encoding
-- **`general_pipeline.py`**: Main processing pipeline with comprehensive argument parsing
-- **`prompt_utils.py`**: Prompt management and formatting utilities
-
-#### Features
-
-- 🚀 **High Concurrency**: Up to 50 concurrent API calls
-- 🔄 **Retry Logic**: Exponential backoff with configurable retry attempts (10 attempts)
-- 💾 **Temporary Results**: Automatic saving of intermediate results
-- 🖼️ **Image Processing**: Base64 encoding and image resizing (512x512)
-- 📝 **Prompt Templates**: Flexible prompt formatting system
-
-#### Usage Example
-
-```python
-from evaluation.api_call_general2.general_pipeline import main
-import argparse
-
-# Configure arguments
-args = argparse.Namespace(
-    questions_file="questions.json",
-    output_file="output.jsonl",
-    model="gpt-4o",
-    image_key="image_urls",
-    question_key="question"
-)
-
-# Run pipeline
-main()
-```
-
-### 📊 Multi-Choice Evaluation
-
-Comprehensive evaluation system for multiple-choice questions with automated scoring.
-
-#### Key Components
-
-- **`evaluate_responses.py`**: Core evaluation logic with GPT-based answer normalization
-- **`generation_pipeline_all.sh`**: Batch processing script for multiple models
-- **`merge_all_results.py`**: Result aggregation and merging utilities
-
-#### Features
-
-- 🎯 **Automated Scoring**: GPT-based answer extraction and normalization
-- 📈 **Accuracy Calculation**: Comprehensive accuracy metrics
-- 🔄 **Batch Processing**: Efficient processing of large datasets
-- 📊 **Detailed Reports**: Rich evaluation reports with explanations
-
-#### Usage Example
-
-```python
-from evaluation.multi_choice.evaluate_responses import evaluate_results_file
-
-# Evaluate responses
-evaluation_summary = evaluate_results_file(
-    file_path="results.json",
-    openai_api_key="your-api-key"
-)
-
-# Save results
-save_evaluation_results(evaluation_summary, "evaluation_output.json")
-```
-
-### 🧠 Planning Evaluation
-
-Advanced evaluation system for complex planning tasks with DAG-based assessment.
-
-#### Key Components
-
-- **`all_in_one.py`**: Comprehensive planning evaluator with multiple evaluation modes
-- **`unified_prompts.py`**: Standardized prompt templates for consistent evaluation
-- **`generation_pipeline_all.sh`**: Batch processing for planning tasks
-- **`merge_all_results.py`**: Result aggregation utilities
-
-#### Task Types
-
-- **Q1 (Multi-step Planning)**: Complex planning tasks requiring multiple sequential actions
-- **Q2 (Single-step Planning)**: Simple planning tasks requiring one action
-- **Q3 (Yes/No Questions)**: Binary decision tasks
-
-#### Features
-
-- 🎯 **Multi-Modal Evaluation**: Q1, Q2, Q3 task types with specialized evaluation
-- 📊 **DAG-Based Assessment**: Directed Acyclic Graph evaluation for complex tasks
-- 🔄 **Caching System**: Intermediate result caching for efficient processing
-- 📈 **Comprehensive Scoring**: Multiple scoring dimensions and metrics
-- 🎨 **Visual Analysis**: Image-based constraint analysis
-
-#### Usage Example
-
-```python
-from evaluation.planning.all_in_one import main
-import asyncio
-
-# Run comprehensive planning evaluation
-result = asyncio.run(main(
-    use_cache=True,
-    skip_steps=[],
-    input_dir="/path/to/results",
-    dataset_base_dir="/path/to/dataset"
-))
-```
-
----
-
-## 💡 Usage Examples
-
-### Example 1: Basic Multimodal Evaluation
-
-```bash
-# Run evaluation with image processing
-python evaluation/api_call_general2/general_pipeline.py \
-    --questions_file data/questions.json \
-    --output_file results/output.jsonl \
-    --model gpt-4o \
-    --image_key image_urls \
-    --question_key question
-```
-
-### Example 2: Batch Multi-Choice Evaluation
-
-```bash
-# Run batch evaluation for multiple models
-cd evaluation/multi-choice
-bash generation_pipeline_all.sh
-```
-
-### Example 3: Comprehensive Planning Evaluation
-
-```bash
-# Run full planning evaluation pipeline
-python evaluation/planning/all_in_one.py \
-    --input-dir results/ \
-    --dataset-base-dir /path/to/RoboBench-hf \
-    --no-cache \
-    --version v1.0
-```
-
-### Example 4: Skip Specific Steps
-
-```bash
-# Skip certain evaluation steps
-python evaluation/planning/all_in_one.py \
-    --input-dir results/ \
-    --dataset-base-dir /path/to/RoboBench-hf \
-    --skip-steps q1_extract q1_dag \
-    --version v1.0
-```
-
----
-
-## ⚙️ Configuration
-
-### Environment Variables
-
-```bash
-export OPENAI_API_KEY="your-api-key-here"
-export BASE_DIR="/path/to/RoboBench-hf"
-export RESULTS_DIR="/path/to/results"
-```
-
-### Model Configuration
-
-```python
-# Configure models and parameters
-models = ["gpt-4o", "gpt-4", "claude-3"]
-max_concurrent = 50
-timeout = 360
-retry_attempts = 10
-```
-
-### Evaluation Parameters
-
-```python
-# Planning evaluation parameters
-evaluation_config = {
-    "use_cache": True,
-    "skip_steps": [],
-    "dataset_base_dir": "/path/to/dataset",
-    "version": "v1.0"
-}
-```
-
----
-
-## 🔧 Troubleshooting
-
-### Common Issues
-
-1. **API Rate Limiting**
-   ```python
-   # Reduce concurrency
-   MAX_CONCURRENT = 20
-   ```
-
-2. **Memory Issues**
-   ```python
-   # Process in smaller batches
-   batch_size = 100
-   ```
-
-3. **Timeout Errors**
-   ```python
-   # Increase timeout
-   TASK_TIMEOUT = 1200
-   ```
-
-4. **Missing DAG Files**
-   ```bash
-   # Ensure dataset base directory is correct
-   --dataset-base-dir /path/to/RoboBench-hf
-   ```
-
-### Debug Mode
-
-```python
-# Enable detailed logging
-import logging
-logging.basicConfig(level=logging.DEBUG)
-```
-
----
-
-## 📊 Performance Metrics
-
-| Metric | Value |
-|--------|-------|
-| **Concurrency** | Up to 50 concurrent requests |
-| **Retry Logic** | 10 attempts with exponential backoff |
-| **Timeout** | 360 seconds per request |
-| **Cache Support** | Intermediate result caching |
-| **Batch Processing** | Efficient large-scale evaluation |
-| **Image Processing** | 512x512 resize with base64 encoding |
+- **⚡ Automated Pipeline**: Complete evaluation pipeline with batch processing
+- **📈 Detailed Analytics**: Comprehensive scoring and analysis tools
 
 ---
 
@@ -395,6 +75,174 @@ evaluation/
 
 ---
 
+## 🛠️ Installation
+
+### Prerequisites
+
+- Python 3.8+
+- OpenAI API key
+- RoboBench dataset (download from [Hugging Face](https://huggingface.co/datasets/LeoFan01/RoboBench))
+
+### Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/lyl750697268/RoboBench
+   cd RoboBench
+   ```
+
+2. **Install dependencies**
+   ```bash
+   conda create -n robobench python=3.10
+   conda activate robobench
+   pip install -r requirements.txt
+   ```
+
+3. **Download the dataset**
+   ```bash
+   pip install huggingface_hub
+   huggingface-cli login  
+   huggingface-cli download LeoFan01/RoboBench --local-dir ./RoboBench_dataset
+   ```
+
+---
+
+## 🚀 Quick Start
+### 1. Configure API credentials
+Complete your individual settings in:
+```bash
+`evaluation/multi-choice/generation_pipeline_all.sh`
+`evaluation/planning/generation_pipeline_all.sh`
+```
+
+```bash
+models=("gpt-4o") # models you want to eval
+
+BASE_DIR="Your own path to the RoboBench-hf dataset"
+
+OPENAI_API_KEY="Your own OpenAI API key"
+
+BASE_URL="Your own base URL for the API"
+
+RESULTS_DIR="Your own path to the results directory"
+
+TARGET_DIRS=("1_instruction_comprehension" "2_perception_reasoning" "3_generalized_planning" "4_affordance_reasoning" "5_error_analysis") # dimensions you want to eval
+```
+
+### 2. Run Complete Evaluation Pipeline
+
+**For Multi-Choice Questions** (Perception Reasoning, Affordance Reasoning, Error Analysis):
+```bash
+cd evaluation/multi-choice
+bash generation_pipeline_all.sh
+```
+
+**For Planning Questions** (Instruction Comprehension, Generalized Planning):
+```bash
+cd evaluation/planning
+bash generation_pipeline_all.sh
+```
+
+---
+
+## 📁 Evaluation Framework
+
+### 🔄 API Call General2
+
+The core infrastructure for handling multimodal API calls with advanced features.
+
+#### Key Components
+
+- **`api_utils.py`**: Asynchronous API utilities with retry logic and concurrency control
+- **`cv_utils.py`**: Computer vision utilities for image processing and base64 encoding
+- **`general_pipeline.py`**: Main processing pipeline with comprehensive argument parsing
+- **`prompt_utils.py`**: Prompt management and formatting utilities
+
+#### Usage Example
+
+```python
+from evaluation.api_call_general2.general_pipeline import main
+import argparse
+
+# Configure arguments
+args = argparse.Namespace(
+    base_url="Your own base URL for the API",
+    api_key="Your own OpenAI API key",
+    questions_file="questions.json",
+    output_file="output.jsonl",
+    result_dir="/path/to/results",
+    system_prompt_file="/path/to/RoboBench-dataset/system_prompt.json",
+    model="gpt-4o",
+    image_key="image_urls",
+    question_key="question"
+)
+
+# Run pipeline
+main()
+```
+
+### 📊 Multi-Choice Evaluation
+
+Comprehensive evaluation system for multiple-choice questions with automated scoring.
+
+#### Key Components
+
+- **`evaluate_responses.py`**: Core evaluation logic with GPT-based answer normalization
+- **`generation_pipeline_all.sh`**: Batch processing script for multiple models
+- **`merge_all_results.py`**: Result aggregation and merging utilities
+
+#### Usage Example
+
+```python
+from evaluation.multi_choice.evaluate_responses import evaluate_results_file
+
+# Evaluate responses
+evaluation_summary = evaluate_results_file(
+    file_path="results.json",
+    openai_api_key="Your own OpenAI API key",
+    base_url="Your own base URL for the API"
+)
+
+# Save results
+save_evaluation_results(evaluation_summary, "evaluation_output.json")
+```
+
+### 🧠 Planning Evaluation
+
+Advanced evaluation system for complex planning tasks with DAG-based assessment.
+
+#### Key Components
+
+- **`all_in_one.py`**: Comprehensive planning evaluator with multiple evaluation modes
+- **`unified_prompts.py`**: Standardized prompt templates for consistent evaluation
+- **`generation_pipeline_all.sh`**: Batch processing for planning tasks
+- **`merge_all_results.py`**: Result aggregation utilities
+
+#### Task Types
+
+- **Q1 (Multi-step Planning)**: Complex planning tasks requiring multiple sequential actions
+- **Q2 (Single-step Planning)**: Simple planning tasks requiring one action
+- **Q3 (Yes/No Questions)**: Binary decision tasks
+
+#### Usage Example
+
+```python
+from evaluation.planning.all_in_one import main
+import asyncio
+
+# Run comprehensive planning evaluation
+result = asyncio.run(main(
+    use_cache=False,
+    skip_steps=[], # type of tasks you don't want eval
+    input_dir="/path/to/results",
+    dataset_base_dir="/path/to/RoboBench-dataset",
+    api_key="Your own OpenAI API key",
+    base_url="Your own base URL for the API"
+))
+```
+
+---
+
 ## 🤝 Contributing
 
 We welcome contributions! Please see our contributing guidelines:
@@ -409,15 +257,23 @@ We welcome contributions! Please see our contributing guidelines:
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache2.0 License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 🙏 Acknowledgments
+## 🙏 Citation
 
-- OpenAI for providing the GPT models
-- The RoboBench team for the comprehensive evaluation framework
-- Contributors and the open-source community
+```
+@misc{luo2025robobenchcomprehensiveevaluationbenchmark,
+      title={Robobench: A Comprehensive Evaluation Benchmark for Multimodal Large Language Models as Embodied Brain}, 
+      author={Yulin Luo and Chun-Kai Fan and Menghang Dong and Jiayu Shi and Mengdi Zhao and Bo-Wen Zhang and Cheng Chi and Jiaming Liu and Gaole Dai and Rongyu Zhang and Ruichuan An and Kun Wu and Zhengping Che and Shaoxuan Xie and Guocai Yao and Zhongxia Zhao and Pengwei Wang and Guang Liu and Zhongyuan Wang and Tiejun Huang and Shanghang Zhang},
+      year={2025},
+      eprint={2510.17801},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO},
+      url={https://arxiv.org/abs/2510.17801}, 
+}
+```
 
 ---
 
@@ -425,6 +281,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **RoboBench Metric Evaluation Framework** - *Empowering the future of robotic AI evaluation*
 
-[🔗 Documentation](https://github.com/your-repo/docs) | [🐛 Report Issues](https://github.com/your-repo/issues) | [💬 Discussions](https://github.com/your-repo/discussions)
+[🔗 Documentation](https://github.com/lyl750697268/RoboBench/blob/main/README.md) | [🐛 Report Issues](https://github.com/lyl750697268/RoboBench/issues) | [💬 Pull requests](https://github.com/lyl750697268/RoboBench/pulls)
 
 </div>

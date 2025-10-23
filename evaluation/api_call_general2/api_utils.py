@@ -11,8 +11,6 @@ SET_SERVER_VERSION = 0
 base_url="https://api.openai.com/v1"
 api_key="Your own OpenAI API key"
 
-client = AsyncOpenAI(base_url=base_url, api_key=api_key, timeout=360)
-
 MAX_CONCURRENT = 50
 
 model = "gpt-4o"
@@ -36,13 +34,13 @@ async def save_temp_results(results, save_path, current_count):
         await f.write(json.dumps(results, ensure_ascii=False, indent=2))
 
 @retry(stop=stop_after_attempt(10), wait=wait_exponential(multiplier=1, min=1, max=10), retry_error_callback=retry_error_callback)
-async def get_chat_completion(messages: dict, request_id, semaphore, api_model=model, retry_count=0) -> str:
+async def get_chat_completion(messages: dict, request_id, semaphore, api_model=model, base_url=base_url, api_key=api_key, retry_count=0) -> str:
     response = None
     resp = {'id': request_id}
     try:
         async with semaphore:
             response = await AsyncOpenAI(
-                base_url=client.base_url, api_key=client.api_key, timeout=360
+                base_url=base_url, api_key=api_key, timeout=360
             ).chat.completions.create(
                 model=api_model, messages=messages, timeout=360
             )
@@ -58,7 +56,7 @@ async def get_chat_completion(messages: dict, request_id, semaphore, api_model=m
         raise
 
 
-async def request_model(prompts, request_ids, api_model=model, save_path="results"):
+async def request_model(prompts, request_ids, api_model=model, base_url=base_url, api_key=api_key, save_path="results"):
     semaphore = asyncio.Semaphore(MAX_CONCURRENT)
     results = [None] * len(prompts)
     completed_count = 0
@@ -66,11 +64,11 @@ async def request_model(prompts, request_ids, api_model=model, save_path="result
     
     TASK_TIMEOUT = 960
 
-    async def wrapped_get_chat_completion(prompt, request_id, index, api_model=model):
+    async def wrapped_get_chat_completion(prompt, request_id, index, api_model=model, base_url=base_url, api_key=api_key):
         nonlocal completed_count, failed_count
         try:
             result = await asyncio.wait_for(
-                get_chat_completion(prompt, request_id, semaphore, api_model),
+                get_chat_completion(prompt, request_id, semaphore, api_model, base_url, api_key),
                 timeout=TASK_TIMEOUT
             )
             completed_count += 1
@@ -89,7 +87,7 @@ async def request_model(prompts, request_ids, api_model=model, save_path="result
             print(f"Task {request_id} (index {index}) failed after all retries: {type(e).__name__} - {str(e)}")
             return index, {'id': request_id, 'response': None, 'error': str(e), 'model': api_model}
 
-    tasks = [wrapped_get_chat_completion(prompt, request_ids[i], i, api_model) for i, prompt in enumerate(prompts)]
+    tasks = [wrapped_get_chat_completion(prompt, request_ids[i], i, api_model, base_url, api_key) for i, prompt in enumerate(prompts)]
     
     print(f"Starting to process {len(tasks)} tasks, maximum concurrent requests: {MAX_CONCURRENT}")
     

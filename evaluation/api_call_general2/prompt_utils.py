@@ -21,55 +21,66 @@ def prompt_no_template(prompt_file, output_file, instruction_key=None, prompt_ke
                 with open(system_prompt_file, 'r') as f:
                     system_prompt = json.load(f)
                 
-                if '3_generalized_planning' in question_type or '1_instruction_comprehension' in question_type or 'temporal_event_order' in question_type:
+                # Define special system prompts that match id patterns
+                special_system_prompts = ['robot_type', 'robot_view', 'spatial_relation', 
+                                        'spatial_temporal_causality', 'high_level_planning_error', 
+                                        'low_level_execution_error']
+                
+                # Physical attributes for generalized planning
+                physical_attributes = ['color', 'number', 'shape', 'size']
+                
+                prefix = ""
+                
+                # Step 1: Add skill list for planning tasks
+                if '3_generalized_planning' in question_type or '1_instruction_comprehension' in question_type:
                     if 'navigation' in question_type:
-                        _prompt['prompt'] = system_prompt['navigation_skill_list'] + prompt[prompt_key]
+                        prefix = system_prompt['navigation_skill_list']
                     else:
                         if 'Q1' in _id:
-                            _prompt['prompt'] = system_prompt['skill_list_Q1'] + prompt[prompt_key]
+                            prefix = system_prompt['skill_list_Q1']
                         elif 'Q2' in _id:
-                            _prompt['prompt'] = system_prompt['skill_list_Q2'] + prompt[prompt_key]
+                            prefix = system_prompt['skill_list_Q2']
                         elif 'Q3' in _id:
-                            _prompt['prompt'] = system_prompt['skill_list_Q3'] + prompt[prompt_key]
+                            prefix = system_prompt['skill_list_Q3']
                         else:
-                            _prompt['prompt'] = system_prompt['skill_list_Q1'] + prompt[prompt_key]
+                            prefix = system_prompt['skill_list_Q1']
+                    
+                    # Add physical attribute prompt for generalized planning
+                    for attr in physical_attributes:
+                        if attr in question_type:
+                            prefix += system_prompt[attr]
+                            break
+
+                    # Step 6: Add prefix - robotic_type
                     if 'robotic_type' in prompt:
                         if prompt['robotic_type'] == "human":
                             robotic_type = "single-arm"
                         else:
                             robotic_type = prompt['robotic_type']
-                        _prompt['prompt'] += f"You are a {robotic_type} robot." 
-                    elif 'temporal_event_order' in question_type:
-                        _prompt['prompt'] += f"You are a single-arm robot." 
+                        prefix += f"You are a {robotic_type} robot."
+                    
+                    # Step 7: Add prefix - multi_view
                     if 'multi_view' in question_type:
                         views = [img.split('.')[0] for img in prompt["image_urls"]]
-                        _prompt['prompt'] += f"The multiple images you have received now represent camera images from different views at the same time. The names of these views are {views} in order."
+                        prefix += f"The multiple images you have received now represent camera images from different views at the same time. The names of these views are {views} in order."
+                    
+                # Step 2: Handle static_attribute
                 elif 'static_attribute' in question_type:
-                    _prompt['prompt'] = system_prompt[_id.split('/')[-2]] + prompt[prompt_key]
-                elif 'robot_type' in question_type:
-                    _prompt['prompt'] = system_prompt['robot_type'] + prompt[prompt_key]
-                elif 'robot_view' in question_type:
-                    _prompt['prompt'] = system_prompt['robot_view'] + prompt[prompt_key]
-                elif 'spatial_relation' in question_type:
-                    _prompt['prompt'] = system_prompt['spatial_relation'] + prompt[prompt_key]
-                elif 'spatial_temporal_causality' in question_type:
-                    _prompt['prompt'] = system_prompt['spatial_temporal_causality'] + prompt[prompt_key]
+                    prefix = system_prompt[_id.split('/')[-2]]
+                
+                # Step 3: Handle affordance point prompts
                 elif 'static_affordance' in question_type or 'dynamic_affordance' in question_type or 'navigation_visual_prompt' in question_type:
-                    _prompt['prompt'] = system_prompt['afforadance_point'] + prompt[prompt_key]
-                elif 'color' in question_type:
-                    _prompt['prompt'] = system_prompt['color'] + prompt[prompt_key]
-                elif 'number' in question_type:
-                    _prompt['prompt'] = system_prompt['number'] + prompt[prompt_key]
-                elif 'shape' in question_type:
-                    _prompt['prompt'] = system_prompt['shape'] + prompt[prompt_key]
-                elif 'size' in question_type:
-                    _prompt['prompt'] = system_prompt['size'] + prompt[prompt_key]
-                elif 'high_level_planning_error' in question_type:
-                    _prompt['prompt'] = system_prompt['high_level_planning_error'] + prompt[prompt_key]
-                elif 'low_level_execution_error' in question_type:
-                    _prompt['prompt'] = system_prompt['low_level_execution_error'] + prompt[prompt_key]
+                    prefix = system_prompt['afforadance_point']
+                
+                # Step 4: Handle special system prompts that match id patterns
                 else:
-                    _prompt['prompt'] = prompt[prompt_key]
+                    for special_key in special_system_prompts:
+                        if special_key in question_type:
+                            prefix = system_prompt[special_key]
+                            break
+                
+                # Step 5: Construct main prompt
+                _prompt['prompt'] = prefix + prompt[prompt_key]
                 
                 # post process
                 choices = prompt.get("options", [])
@@ -85,12 +96,12 @@ def prompt_no_template(prompt_file, output_file, instruction_key=None, prompt_ke
             if image_key is not None:
                 original_images = prompt[image_key]
                 if isinstance(_id, str) and 'static_attribute' in _id:
-                    mapped_images = [f"../../RoboBench-hf/{_id}/{img}" for img in original_images]
+                    mapped_images = [f"{os.path.dirname(system_prompt_file)}/{_id}/{img}" for img in original_images]
                 else:
                     if prompt["input_type"] == "image":
-                        mapped_images = [f"../../RoboBench-hf/{'/'.join(_id.split('/')[:-1])}/{img}" for img in original_images]
+                        mapped_images = [f"{os.path.dirname(system_prompt_file)}/{'/'.join(_id.split('/')[:-1])}/{img}" for img in original_images]
                     else:
-                        mapped_images = [f"../../RoboBench-hf/{_id.split('_Q')[0]}/{img}" for img in original_images]
+                        mapped_images = [f"{os.path.dirname(system_prompt_file)}/{_id.split('_Q')[0]}/{img}" for img in original_images]
                 _prompt['image_urls'] = mapped_images
             fo.write(json.dumps(_prompt, ensure_ascii=False) + '\n')
 

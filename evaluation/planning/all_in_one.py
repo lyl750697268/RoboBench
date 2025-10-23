@@ -28,13 +28,12 @@ from unified_prompts import (
 )
 
 # API configuration
-base_url = "https://api.openai.com/v1"
-api_key = "Your API key"
-client = AsyncOpenAI(base_url=base_url, api_key=api_key, timeout=360)
+base_url = "Your own base URL for the API"
+api_key = "Your own OpenAI API key"
 
 # Set concurrent limit
 MAX_CONCURRENT = 50
-EVAL_MODEL = "gpt-4o"
+EVAL_MODEL = "gpt-4o-2024-11-20"
 
 # Global variables, set in main function
 eval_data_dir = None
@@ -274,13 +273,13 @@ async def save_temp_results(results, save_path, current_count):
         await f.write(json.dumps(results, ensure_ascii=False, indent=2))
 
 @retry(stop=stop_after_attempt(10), wait=wait_exponential(multiplier=1, min=1, max=10), retry_error_callback=retry_error_callback)
-async def get_chat_completion(messages: dict, request_id, semaphore, api_model=EVAL_MODEL, retry_count=0) -> str:
+async def get_chat_completion(messages: dict, request_id, semaphore, api_model=EVAL_MODEL, base_url=base_url, api_key=api_key, retry_count=0) -> str:
     response = None
     resp = {'id': request_id}
     try:
         async with semaphore:  # Use the incoming semaphore to limit concurrency
             response = await AsyncOpenAI(
-                base_url=client.base_url, api_key=client.api_key, timeout=360
+                base_url=base_url, api_key=api_key, timeout=360
             ).chat.completions.create(
                 model=api_model, messages=messages, timeout=360, temperature=0  # Set 60 seconds timeout
             )
@@ -295,7 +294,7 @@ async def get_chat_completion(messages: dict, request_id, semaphore, api_model=E
             print(f"Response status: {response}")
         raise
 
-async def request_model(prompts, request_ids, api_model=EVAL_MODEL, save_path="results"):
+async def request_model(prompts, request_ids, api_model=EVAL_MODEL, base_url=base_url, api_key=api_key, save_path="results"):
     semaphore = asyncio.Semaphore(MAX_CONCURRENT)
     results = [None] * len(prompts)
     completed_count = 0
@@ -304,12 +303,12 @@ async def request_model(prompts, request_ids, api_model=EVAL_MODEL, save_path="r
     # Task level timeout (seconds)
     TASK_TIMEOUT = 960
 
-    async def wrapped_get_chat_completion(prompt, request_id, index, api_model=EVAL_MODEL):
+    async def wrapped_get_chat_completion(prompt, request_id, index, api_model=EVAL_MODEL, base_url=base_url, api_key=api_key):
         nonlocal completed_count, failed_count
         try:
             # Add timeout protection for each task
             result = await asyncio.wait_for(
-                get_chat_completion(prompt, request_id, semaphore, api_model),
+                get_chat_completion(prompt, request_id, semaphore, api_model, base_url, api_key),
                 timeout=TASK_TIMEOUT
             )
             completed_count += 1
@@ -357,7 +356,7 @@ async def request_model(prompts, request_ids, api_model=EVAL_MODEL, save_path="r
 
 
 
-async def process_model_requests_in_memory(task_list, model_name=EVAL_MODEL):
+async def process_model_requests_in_memory(task_list, model_name=EVAL_MODEL, base_url=base_url, api_key=api_key):
     """
     Process model requests in memory using async API calls
 
@@ -414,7 +413,7 @@ async def process_model_requests_in_memory(task_list, model_name=EVAL_MODEL):
         request_ids.append(task["id"])
 
     # Use asynchronous batch processing
-    results = await request_model(prompts, request_ids, api_model=model_name, save_path="temp_results")
+    results = await request_model(prompts, request_ids, api_model=model_name, base_url=base_url, api_key=api_key, save_path="temp_results")
     return results
 
 
@@ -498,7 +497,7 @@ async def classify_and_extract_planning_data(use_cache=True):
     return all_classified_data
 
 # Step 1.1: Extract Plan Information for Q1 tasks only
-async def extract_plan_information_q1(classified_data, use_cache=True):
+async def extract_plan_information_q1(classified_data, use_cache=True, base_url=base_url, api_key=api_key):
     """Only process Q1 task plan information extraction"""
     print("Starting extract_plan_information_q1 step...")
     
@@ -549,7 +548,7 @@ async def extract_plan_information_q1(classified_data, use_cache=True):
         # Process all tasks
         if len(task_model_plan) > 0:
             print(f"Start processing {len(task_model_plan)} Q1 tasks...")
-            model_results = await process_model_requests_in_memory(task_model_plan)
+            model_results = await process_model_requests_in_memory(task_model_plan, base_url=base_url, api_key=api_key)
         else:
             model_results = []
             
@@ -609,7 +608,7 @@ async def extract_plan_information_q1(classified_data, use_cache=True):
     return all_extracted_data
 
 # Step 1.2: Process Q2 tasks (step extraction and comparison)
-async def process_q2_tasks(classified_data, use_cache=True):
+async def process_q2_tasks(classified_data, use_cache=True, base_url=base_url, api_key=api_key):
     """Process Q2 tasks (step extraction and comparison)"""
     print("Starting process_q2_tasks step...")
     
@@ -647,7 +646,7 @@ async def process_q2_tasks(classified_data, use_cache=True):
             extract_results = await process_model_requests_in_memory([
                 {"id": rid, "prompt": prompt, "image_urls": []} 
                 for prompt, rid in zip(extract_prompts, extract_request_ids)
-            ])
+            ], base_url=base_url, api_key=api_key)
         else:
             extract_results = []
         
@@ -692,7 +691,7 @@ async def process_q2_tasks(classified_data, use_cache=True):
             compare_results = await process_model_requests_in_memory([
                 {"id": rid, "prompt": prompt, "image_urls": []} 
                 for prompt, rid in zip(compare_prompts, compare_request_ids)
-            ])
+            ], base_url=base_url, api_key=api_key)
         else:
             compare_results = []
         
@@ -764,7 +763,7 @@ async def process_q2_tasks(classified_data, use_cache=True):
     return all_q2_results
 
 # Step 1.3: Process Q3 tasks (yes/no extraction and comparison)
-async def process_q3_tasks(classified_data, use_cache=True):
+async def process_q3_tasks(classified_data, use_cache=True, base_url=base_url, api_key=api_key):
     """Process Q3 tasks (yes/no extraction and comparison)"""
     
     if use_cache:
@@ -800,7 +799,7 @@ async def process_q3_tasks(classified_data, use_cache=True):
             extract_results = await process_model_requests_in_memory([
                 {"id": rid, "prompt": prompt, "image_urls": []} 
                 for prompt, rid in zip(prompts, request_ids)
-            ])
+            ], base_url=base_url, api_key=api_key)
         else:
             extract_results = []
         
@@ -845,7 +844,7 @@ async def process_q3_tasks(classified_data, use_cache=True):
     return all_q3_results
 
 # Step 2: DAG Generation for Q1 tasks only
-async def dag_llm_evaluation_q1(extracted_data_q1=None, use_cache=True, dataset_base_dir=None, skip_missing_resources=True):
+async def dag_llm_evaluation_q1(extracted_data_q1=None, use_cache=True, dataset_base_dir=None, skip_missing_resources=True, base_url=base_url, api_key=api_key):
     """Generate DAG from extracted Q1 plan information
     
     Now read DAG information from local dag.json file for each dimension, instead of from the unified GT_DAG_all_data.json file
@@ -965,13 +964,13 @@ async def dag_llm_evaluation_q1(extracted_data_q1=None, use_cache=True, dataset_
         # Process all tasks
         if len(task_model_plan) > 0:
             print(f"Start asynchronous processing {len(task_model_plan)} Q1 DAG evaluation tasks...")
-            model_results = await process_model_requests_in_memory(task_model_plan)
+            model_results = await process_model_requests_in_memory(task_model_plan, base_url=base_url, api_key=api_key)
         else:
             model_results = []
             
         # Process results
         final_result = []
-        successful_evaluations = 0
+        successful_evaluations = 0  
         
         for idx in range(len(model_results)):
             try:
@@ -1453,7 +1452,7 @@ def statistics_final_score_by_type(q1_dag_data=None, q2_results=None, q3_results
     
     return final_scores
 
-async def process_directory(dir_path, use_cache=True, skip_steps=None, dataset_base_dir=None):
+async def process_directory(dir_path, use_cache=True, skip_steps=None, dataset_base_dir=None, base_url=base_url, api_key=api_key):
     """Process a single directory
     
     Args:
@@ -1461,6 +1460,8 @@ async def process_directory(dir_path, use_cache=True, skip_steps=None, dataset_b
         use_cache: Whether to use cached intermediate results
         skip_steps: List of steps to skip
         dataset_base_dir: Dataset base directory path
+        base_url: Base URL for the API
+        api_key: API key
     """
     print(f"\nProcessing directory: {dir_path}")
     print(f"Dataset base directory: {dataset_base_dir}")
@@ -1492,23 +1493,23 @@ async def process_directory(dir_path, use_cache=True, skip_steps=None, dataset_b
     
     if 'q1_extract' not in skip_steps:
         print("=== Process Q1 tasks - extract plan information ===")
-        q1_extracted_data = await extract_plan_information_q1(classified_data, use_cache=use_cache)
+        q1_extracted_data = await extract_plan_information_q1(classified_data, use_cache=use_cache, base_url=base_url, api_key=api_key)
     
     if 'q1_dag' not in skip_steps and q1_extracted_data:
         print("=== Process Q1 tasks - DAG generation ===")
-        q1_dag_data = await dag_llm_evaluation_q1(q1_extracted_data, use_cache=use_cache, dataset_base_dir=dataset_base_dir)
+        q1_dag_data = await dag_llm_evaluation_q1(q1_extracted_data, use_cache=use_cache, dataset_base_dir=dataset_base_dir, base_url=base_url, api_key=api_key)
     
     # Process Q2 tasks
     q2_results = None
     if 'q2' not in skip_steps:
         print("=== Process Q2 tasks ===")
-        q2_results = await process_q2_tasks(classified_data, use_cache=use_cache)
+        q2_results = await process_q2_tasks(classified_data, use_cache=use_cache, base_url=base_url, api_key=api_key)
     
     # Process Q3 tasks
     q3_results = None
     if 'q3' not in skip_steps:
         print("=== Process Q3 tasks ===")
-        q3_results = await process_q3_tasks(classified_data, use_cache=use_cache)
+        q3_results = await process_q3_tasks(classified_data, use_cache=use_cache, base_url=base_url, api_key=api_key)
     
     # Calculate final scores
     if 'final_score' not in skip_steps:
@@ -1530,7 +1531,7 @@ async def process_directory(dir_path, use_cache=True, skip_steps=None, dataset_b
         'final_scores': final_scores
     }
 
-async def main(use_cache=True, skip_steps=None, input_dir=None, version=None, dataset_base_dir=None):
+async def main(use_cache=True, skip_steps=None, input_dir=None, version=None, dataset_base_dir=None, base_url=base_url, api_key=api_key):
     """
     Main program entry - supports Q1, Q2, Q3 separately
     
@@ -1540,11 +1541,13 @@ async def main(use_cache=True, skip_steps=None, input_dir=None, version=None, da
     input_dir (str): Input data directory path
     version (str): Version subdirectory name
     dataset_base_dir (str): Dataset base directory path, used to read DAG information
+    base_url: Base URL for the API
+    api_key: API key
     """
     print("Starting enhanced all-in-one pipeline execution...")
     
     if not input_dir:
-        input_dir = os.environ.get('EVAL_DATA', "../../results")
+        input_dir = os.environ.get('EVAL_DATA', "")
     
     print(f"Input directory: {input_dir}")
     print(f"Dataset base directory: {dataset_base_dir}")
@@ -1566,7 +1569,7 @@ async def main(use_cache=True, skip_steps=None, input_dir=None, version=None, da
         for subdir in subdirs:
             subdir_path = os.path.join(input_dir, subdir)
             print(f"\n{'='*60}\nProcessing subdirectory: {subdir_path}")
-            result = await process_directory(subdir_path, use_cache, skip_steps, dataset_base_dir)
+            result = await process_directory(subdir_path, use_cache, skip_steps, dataset_base_dir, base_url, api_key)
             if result:
                 all_results[subdir] = result
                 # After processing, move the outputs to the version subdirectory
@@ -1574,7 +1577,7 @@ async def main(use_cache=True, skip_steps=None, input_dir=None, version=None, da
     elif json_files:
         print(f"Found JSON files: {json_files}")
         # Directly process the current directory
-        result = await process_directory(input_dir, use_cache, skip_steps, dataset_base_dir)
+        result = await process_directory(input_dir, use_cache, skip_steps, dataset_base_dir, base_url, api_key)
         if result:
             all_results['root'] = result
             # After processing, move the outputs to the version subdirectory
@@ -1600,7 +1603,10 @@ if __name__ == '__main__':
                       help='Version subdirectory name, e.g. v1, 20240930, etc.')
     parser.add_argument('--dataset-base-dir', type=str, default='Your own path to the RoboBench-hf dataset',
                       help='Dataset base directory path, default is your own path to the RoboBench-hf dataset')
-    
+    parser.add_argument('--base-url', type=str, default='Your own base URL for the API',
+                      help='Base URL for the API')
+    parser.add_argument('--api-key', type=str, default='Your own OpenAI API key',
+                      help='API key')
     args = parser.parse_args()
     
     print("Starting parameters:")
@@ -1609,12 +1615,16 @@ if __name__ == '__main__':
     print(f"  Input directory: {args.input_dir}")
     print(f"  Dataset base directory: {args.dataset_base_dir}")
     print(f"  Version subdirectory: {args.version}")
-    
+    print(f"  Base URL: {args.base_url}")
+    print(f"  API key: {args.api_key}")
+
     result = asyncio.run(main(
         use_cache=args.use_cache,
         skip_steps=args.skip_steps,
         input_dir=args.input_dir,
         version=args.version,
-        dataset_base_dir=args.dataset_base_dir
+        dataset_base_dir=args.dataset_base_dir,
+        base_url=args.base_url,
+        api_key=args.api_key
     ))
     print("\nProgram executed successfully!")
