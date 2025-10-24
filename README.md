@@ -31,9 +31,9 @@
 [Tiejun Huang]()<sup>1,2</sup>,
 [Shanghang Zhang](https://idm.pku.edu.cn/info/1017/1598.htm)<sup>1,2✉️</sup>
 
-<sup>1</sup>State Key Laboratory of Multimedia Information Processing, School of Computer Science, Peking University, <sup>2</sup>Beijing Academy of Artificial Intelligence,
-
-<sup>3</sup>Institute for Brain and Intelligence, Fudan University, <sup>4</sup>University of Science and Technology Beijing, <sup>5</sup>Beijing Innovation Center of Humanoid Robotics
+<sup>1</sup>State Key Laboratory of Multimedia Information Processing, School of Computer Science, Peking University, 
+<sup>2</sup>Beijing Academy of Artificial Intelligence, <sup>3</sup>Institute for Brain and Intelligence, Fudan University, 
+<sup>4</sup>University of Science and Technology Beijing, <sup>5</sup>Beijing Innovation Center of Humanoid Robotics
 
 </h5>
 
