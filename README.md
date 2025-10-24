@@ -4,6 +4,39 @@
 
 <h1 align="center" style="font-size:2.5em;">RoboBench: A Comprehensive Evaluation Benchmark for Multimodal Large Language Models as Embodied Brain</h1>
 
+<h5 align="center"> 
+
+[Yulin Luo]()<sup>1,2* </sup>,
+[Chun-Kai Fan](https://scholar.google.com/citations?user=TxeAbWkAAAAJ&hl=en&oi=ao)<sup>1*</sup>,
+[Menghang Dong]()<sup>1*</sup>,
+[Jiayu Shi]()<sup>1,2*</sup>,
+[Mengdi Zhao]()<sup>3*</sup>,
+[Bo-Wen Zhang]()<sup>4*</sup>,
+
+[Cheng Chi]()<sup>2</sup>,
+[Jiaming Liu]()<sup>1</sup>,
+[Gaole Dai]()<sup>1</sup>,
+[Rongyu Zhang]()<sup>1</sup>,
+[Ruichuan An]()<sup>1</sup>,
+
+[Kun Wu]()<sup>5</sup>,
+[Zhengping Che]()<sup>5</sup>,
+[Shaoxuan Xie]()<sup>2</sup>,
+[Guocai Yao]()<sup>2</sup>,
+
+[Zhongxia Zhao]()<sup>1,2</sup>,
+[Pengwei Wang]()<sup>2</sup>,
+[Guang Liu]()<sup>2</sup>,
+[Zhongyuan Wang]()<sup>2</sup>,
+[Tiejun Huang]()<sup>1,2</sup>,
+[Shanghang Zhang](https://idm.pku.edu.cn/info/1017/1598.htm)<sup>1,2✉️</sup>
+
+<sup>1</sup>State Key Laboratory of Multimedia Information Processing, School of Computer Science, Peking University, <sup>2</sup>Beijing Academy of Artificial Intelligence,
+
+<sup>3</sup>Institute for Brain and Intelligence, Fudan University, <sup>4</sup>University of Science and Technology Beijing, <sup>5</sup>Beijing Innovation Center of Humanoid Robotics
+
+</h5>
+
 <div align="center">
 
 [![Paper](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/abs/2510.17801v1)
@@ -12,6 +45,10 @@
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
 </div>
+
+<p align="center">
+  <img src="assets/teaser.png" alt="RoboBench Teaser" width="120"/>
+</p>
 
 ---
 
@@ -399,14 +436,11 @@ This project is licensed under the Apache2.0 License - see the [LICENSE](LICENSE
 ## 🙏 Citation
 
 ```
-@misc{luo2025robobenchcomprehensiveevaluationbenchmark,
-      title={Robobench: A Comprehensive Evaluation Benchmark for Multimodal Large Language Models as Embodied Brain}, 
-      author={Yulin Luo and Chun-Kai Fan and Menghang Dong and Jiayu Shi and Mengdi Zhao and Bo-Wen Zhang and Cheng Chi and Jiaming Liu and Gaole Dai and Rongyu Zhang and Ruichuan An and Kun Wu and Zhengping Che and Shaoxuan Xie and Guocai Yao and Zhongxia Zhao and Pengwei Wang and Guang Liu and Zhongyuan Wang and Tiejun Huang and Shanghang Zhang},
-      year={2025},
-      eprint={2510.17801},
-      archivePrefix={arXiv},
-      primaryClass={cs.RO},
-      url={https://arxiv.org/abs/2510.17801}, 
+@article{luo2025robobench,
+  title={Robobench: A Comprehensive Evaluation Benchmark for Multimodal Large Language Models as Embodied Brain},
+  author={Luo, Yulin and Fan, Chun-Kai and Dong, Menghang and Shi, Jiayu and Zhao, Mengdi and Zhang, Bo-Wen and Chi, Cheng and Liu, Jiaming and Dai, Gaole and Zhang, Rongyu and others},
+  journal={arXiv preprint arXiv:2510.17801},
+  year={2025}
 }
 ```
 
