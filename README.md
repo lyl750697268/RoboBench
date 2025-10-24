@@ -284,7 +284,7 @@ result = asyncio.run(main(
 ---
 
 ## 😲 Results
-<h1>Results on Perception Reasoning</h1>
+### Results on Perception Reasoning
 <p><strong>Attr.</strong> = Attribute; <strong>Temp.</strong> = Temporal; <strong>Refer. Comprehen.</strong> = Reference Comprehension</p>
 <table>
 <tr style="background:#f2f2f2;"><th></th><th colspan="9"><strong>Perception Reasoning</strong></th></tr>
@@ -328,7 +328,7 @@ result = asyncio.run(main(
 
 </table>
 
-<h1>Results on Instruction Comprehension and Generalized Planning Q1</h1>
+### Results on Instruction Comprehension and Generalized Planning Q1
 <p><strong>manip.</strong> = manipulation; <strong>Afford.</strong> = affordance; <strong>Knowl.</strong> = Knowledge</p>
 <table>
 <tr style="background:#e6e6e6;"><th><strong>Model</strong></th><th colspan="3"><strong>Instruction Comprehension</strong></th><th colspan="11"><strong>Generalized Planning</strong></th></tr>
@@ -372,7 +372,7 @@ result = asyncio.run(main(
 
 </table>
 
-<h1>Results on Affordance Prediction and Failure Analysis</h1>
+### Results on Affordance Prediction and Failure Analysis
 <p><strong>Naviga.</strong> = Navigation</p>
 <table>
 <tr style="background:#e6e6e6;"><th><strong>Model</strong></th><th colspan="4"><strong>Affordance Prediction</strong></th><th colspan="3"><strong>Failure Analysis</strong></th></tr>
