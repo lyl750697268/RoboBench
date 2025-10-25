@@ -142,7 +142,7 @@ evaluation/
    ```bash
    pip install huggingface_hub
    huggingface-cli login  
-   huggingface-cli download LeoFan01/RoboBench --local-dir ./RoboBench_dataset
+   huggingface-cli download LeoFan01/RoboBench --local-dir ./RoboBench_dataset --repo-type dataset
    ```
 
 ---
